@@ -233,7 +233,7 @@
             <div>
                 <h2 style="text-align: center;">Оставьте свои контакты</h2>
                 <div class="feedback-form-container">
-                    <form class="feedback-form" action="#" method="get">
+                    <form class="feedback-form" id="feedback-form" action="#" method="get">
                         <div>
                             <label for="last_name">Фамилия</label>
                             <input id="last_name" name="last_name" type="text">
@@ -265,5 +265,102 @@
     <footer class="footer">
         Создал Андрей Семенцов (<a href="mailto:thesunlightday@gmail.com">thesunlightday@gmail.com</a>)
     </footer>
+
+    <script>
+        function validateFioFormField (inputHTMLElement, fieldTitle) {
+            if (!inputHTMLElement || !inputHTMLElement.value) {
+                alert('Ошибка: Введите значение в поле ' + fieldTitle)
+                return false
+            }
+            if (inputHTMLElement.value.length < 2) {
+                alert(`Ошибка: Поле ${fieldTitle} должно состоять минимум из двух букв`)
+                return false
+            }
+            if (!(/^[a-zA-Zа-яА-Я]+$/.test(inputHTMLElement.value))) {
+                alert(`Ошибка: Поле ${fieldTitle} должно состоять только из букв`)
+                return false
+            }
+
+            return true
+        }
+
+        function validateBirthdayFormField (inputHTMLElement) {
+            if (!inputHTMLElement || !inputHTMLElement.value) {
+                alert('Ошибка: Введите дату рождения')
+                return false
+            }
+
+            const birthdayDate = new Date(inputHTMLElement.value)
+            const today = new Date()
+
+            if (birthdayDate >= today) {
+                alert('Ошибка: Дата рождения не может быть больше текущей даты')
+                return false
+            }
+
+            return true
+        }
+
+        function validatePhoneNumberFormField (inputHTMLElement) {
+            if (!inputHTMLElement || !inputHTMLElement.value) {
+                alert('Ошибка: Введите номер телефона')
+                return false
+            }
+
+            const phoneNumberRegex = /\d/
+
+            if (!(phoneNumberRegex.test(inputHTMLElement.value))) {
+                alert('Ошибка: Неправильный формат номера телефона (введите номер в формате +71111111111)')
+                return false
+            }
+
+            return true
+        }
+
+        function validateFeedbackForm (formHTMLElement) {
+            if (!formHTMLElement) {
+                alert('Ошибка: форма не существует')
+                return false
+            }
+
+            const lastName = formHTMLElement.querySelector('#last_name')
+            if (!validateFioFormField(lastName, 'Фалимия')) {
+                return false
+            }
+
+            const firstName = formHTMLElement.querySelector('#first_name')
+            if (!validateFioFormField(firstName, 'Имя')) {
+                return false
+            }
+
+            const middleName = formHTMLElement.querySelector('#middle_name')
+            if (!validateFioFormField(middleName, 'Отчество')) {
+                return false
+            }
+
+            const birthday = formHTMLElement.querySelector('#birthday')
+            if (!validateBirthdayFormField(birthday)) {
+                return false
+            }
+
+            const phoneNumber = formHTMLElement.querySelector('#phone_number')
+            if (!validatePhoneNumberFormField(phoneNumber)) {
+                return false
+            }
+
+            return true
+        }
+
+        const feedbackForm = document.getElementById('feedback-form')
+        feedbackForm.onsubmit = function (event) {
+            event.preventDefault()
+
+            const isFormValid = validateFeedbackForm(feedbackForm)
+
+            if (isFormValid) {
+                feedbackForm.submit()
+            }
+        }
+    </script>
 </body>
 </html>
